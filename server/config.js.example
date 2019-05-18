@@ -1,0 +1,10 @@
+var config_data ={
+    database: "",
+    username: "",
+    password: "",
+    port: "5432",
+    localhost:"127.0.0.1",
+    cors:4200,
+
+}
+module.exports = config_data;

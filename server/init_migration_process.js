@@ -1,0 +1,1 @@
+const migrat = require('../server1/migration/init.js');
