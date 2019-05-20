@@ -4,9 +4,31 @@ import './App.css';
 
 class App extends Component {
     state = {
+        grafic1:[],
         persons: [],
-        grafic: []
+        grafic: [],
+        graficId:[],
+        post : '',
+        responseToPost:[],
+        response:''
     }
+    putUrl(b){
+        fetch(`http://localhost:5000/perso/${b}`)
+            .then(res => res.json())
+            .then((data) => {
+                let a = {};
+                a[b] = data;
+                this.setState(a);
+
+                console.log(this.state[b])
+            })
+            .catch(console.log())
+    }
+
+    g(){
+       console.log(this.state.persons)
+    }
+
 
     componentDidMount() {
 
@@ -14,7 +36,8 @@ class App extends Component {
             .then(res => res.json())
             .then((data) => {
                 this.setState({persons: data})
-                console.log(this.state.persons)
+                console.log(this.state.persons[0].firstname)
+                this.state.name = this.state.persons[0].firstname
             })
             .catch(console.log)
 
@@ -26,6 +49,12 @@ class App extends Component {
             })
             .catch(console.log)
 
+       this.g()
+
+
+
+
+
 
     }
 
@@ -34,13 +63,18 @@ class App extends Component {
         const response = await fetch('/api/world', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/data-json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({post: this.state.post}),
+            body: JSON.stringify({ post: this.state.post }),
         });
         const body = await response.text();
-        this.setState({responseToPost: body});
+        this.setState({ responseToPost: body });
+
+
+
     };
+
+
 
     render() {
 
@@ -48,28 +82,36 @@ class App extends Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
+                   <div id = "left">
+                       <form onSubmit={this.handleSubmit}>
+                           <button type="submit">Attendance history</button>
+
+                           <select onChange={e => this.setState({ post: e.target.value })}  value={this.state.post} >
+                               {this.state.persons.map(item => (
+                                   <option >{item.id}</option>
+                               ))}
+                           </select>
+                       </form>
+                   </div>
+                    <div id = "rigth">
+                        <button>{'<'}</button> d1-d2 <button>{'>'}</button>
+                    </div>
                 </header>
-                <p>{this.state.response}</p>
-                {/*<form onSubmit={this.handleSubmit}>*/}
-                {/*<p>*/}
-                {/*<strong>Post to Server:</strong>*/}
-                {/*</p>*/}
-                {/*<input*/}
-                {/*type="text"*/}
-                {/*value={this.state.post}*/}
-                {/*onChange={e => this.setState({ post: e.target.value })}*/}
-                {/*/>*/}
-                {/*<button type="submit">Submit</button>*/}
-                {/*</form>*/}
-                <p>{this.state.responseToPost}</p>
+                <div>
+
+                    {this.state.persons.map(item => (
+                        <div><span className='name'>{item.firstname}</span>
+                            {this.state.grafic.map(item => (
+                                <div>{item.from_time}
+
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+
+                </div>
+
+
             </div>
         );
     }
